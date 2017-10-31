@@ -1,0 +1,29 @@
+div.get-some-perspective-score
+{
+    position: fixed;
+    right: 10px;
+    top: 10px;
+    font-size: 18pt;
+    color: white;
+    z-index: 99999999;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.get-some-perspective-fade-out
+{
+    animation: get-some-perspective-fade-out 3s 2s;
+}
+
+@keyframes get-some-perspective-fade-out
+{
+    from
+    {
+        opacity: 1;
+    }
+
+    to
+    {
+        opacity: 0;
+    }
+}
