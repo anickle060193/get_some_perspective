@@ -23,23 +23,45 @@ function getBackgroundColor( score )
     return `rgb( ${red.toFixed( 0 )}, ${green.toFixed( 0 )}, ${blue.toFixed( 0 )} )`;
 }
 
-chrome.runtime.onMessage.addListener( ( message ) =>
+chrome.runtime.onMessage.addListener( ( () =>
 {
-    let scoreDiv = document.createElement( 'div' );
-    scoreDiv.textContent = ( message.score * 100 ).toFixed( 2 );
-    scoreDiv.classList.add( 'get-some-perspective-score', 'get-some-perspective-fade-out' );
-    scoreDiv.style.backgroundColor = getBackgroundColor( message.score );
-    scoreDiv.addEventListener( 'animationend', ( event ) =>
+    let scoreDiv = null;
+
+    function removeScoreDiv()
     {
-        scoreDiv.remove();
-    } );
-    scoreDiv.addEventListener( 'mouseenter', ( event ) =>
+        if( scoreDiv )
+        {
+            scoreDiv.remove();
+        }
+        window.removeEventListener( 'resize', removeScoreDiv );
+    }
+
+    return ( message ) =>
     {
-        scoreDiv.classList.remove( 'get-some-perspective-fade-out' );
-    } );
-    scoreDiv.addEventListener( 'mouseleave', ( event ) =>
-    {
-        scoreDiv.classList.add( 'get-some-perspective-fade-out' );
-    } );
-    document.body.appendChild( scoreDiv );
-} );
+        removeScoreDiv();
+
+        scoreDiv = document.createElement( 'div' );
+        scoreDiv.textContent = `Toxicity: ${( message.score * 100 ).toFixed( 2 )}%`;
+        scoreDiv.classList.add( 'get-some-perspective-score', 'get-some-perspective-fade-out' );
+        scoreDiv.style.backgroundColor = getBackgroundColor( message.score );
+
+        let position = window.getSelection().getRangeAt( 0 ).getBoundingClientRect();
+        scoreDiv.style.left = ( window.scrollX + position.left + position.width ) + 'px';
+        scoreDiv.style.top = ( window.scrollY + position.top - scoreDiv.clientHeight ) + 'px';
+
+        scoreDiv.addEventListener( 'animationend', removeScoreDiv );
+
+        scoreDiv.addEventListener( 'mouseenter', ( event ) =>
+        {
+            scoreDiv.classList.remove( 'get-some-perspective-fade-out' );
+        } );
+        scoreDiv.addEventListener( 'mouseleave', ( event ) =>
+        {
+            scoreDiv.classList.add( 'get-some-perspective-fade-out' );
+        } );
+
+        document.body.insertBefore( scoreDiv, document.body.firstChild );
+
+        window.addEventListener( 'resize', removeScoreDiv );
+    };
+} )() );

@@ -1,12 +1,11 @@
 div.get-some-perspective-score
 {
-    position: fixed;
-    right: 10px;
-    top: 10px;
-    font-size: 18pt;
+    position: absolute;
+    font-size: 12pt;
     color: white;
-    z-index: 99999999;
-    padding: 10px;
+    z-index: 1000000000;
+    margin-left: 4px;
+    padding: 2px;
     border-radius: 4px;
 }
 
