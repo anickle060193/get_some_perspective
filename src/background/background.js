@@ -18,7 +18,7 @@ chrome.runtime.onInstalled.addListener( ( details ) =>
 
     let contextMenu = {
         id: CONTEXT_MENU_ID,
-        title: 'Get Some Perspective',
+        title: 'Get some Perspective on "%s"',
         contexts: [ 'selection' ]
     };
     chrome.contextMenus.create( contextMenu, () =>
